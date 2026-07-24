@@ -204,10 +204,10 @@
     return DEFAULT_STYLE.slice();
   }
   function buildConditionOverride(baseTypes, conditions, sound, volume, styleLines) {
-    const quoted = baseTypes.map((b) => `"${b}"`).join(" ");
-    const lines = [`Show # custom-sound override for ${baseTypes.join(", ")} [${conditions.join("; ")}]`];
+    const label = baseTypes.length ? baseTypes.join(", ") : conditions.join("; ");
+    const lines = [`Show # custom-sound override for ${label}`];
     for (const c of conditions) lines.push("\t" + c.trim());
-    lines.push(`\tBaseType == ${quoted}`);
+    if (baseTypes.length) lines.push(`\tBaseType == ${baseTypes.map((b) => `"${b}"`).join(" ")}`);
     lines.push(...styleLines);
     lines.push(makeSoundLine(sound, volume));
     return new Block(lines);
@@ -239,7 +239,8 @@
       if (conditions.length) {
         const style = styleLinesFor(items, baseTypes, conditions);
         const block = buildConditionOverride(baseTypes, conditions, sound, volume, style);
-        items.splice(0, 0, `${MARKER_BEGIN} - ${baseTypes.join(", ")} >>>`, block, MARKER_END);
+        const label = baseTypes.length ? baseTypes.join(", ") : conditions.join("; ");
+        items.splice(0, 0, `${MARKER_BEGIN} - ${label} >>>`, block, MARKER_END);
         applied++; continue;
       }
       // Override above EVERY Show block listing any of the base types (keeping

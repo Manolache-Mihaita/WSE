@@ -135,7 +135,8 @@ window.PRESETS = [
           "Father's Love", "The Apothecary", "The Price of Devotion", "The Eye of Terror",
           "The Immortal", "Lucky Bastion", "The Demon", "The Insane Cat", "Seven Years Bad Luck",
           "Magnum Opus", "The Doctor" ] },
-        { sound: "unde sunt bani sunt si eu.mp3", volume: 250, baseTypes: ["Cursed Words", "Fire of Unknown Origin"], conditions: ["Class \"Divination Card\""] }
+        { sound: "unde sunt bani sunt si eu.mp3", volume: 250, baseTypes: ["Cursed Words", "Fire of Unknown Origin"], conditions: ["Class \"Divination Card\""] },
+        { sound: "bautura si manele.mp3", volume: 250, conditions: ["Rarity Unique", "Class \"Flask\""] }
       ]
     }
   }

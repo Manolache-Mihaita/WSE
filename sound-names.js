@@ -3,7 +3,7 @@
  * name. Edit this list freely - it is just the starting dropdown. */
 window.BUNDLED_SOUND_NAMES = [
   "Part1.mp3", "afaraaaaa.mp3", "ah lelele.mp3", "ah lelelelele.mp3",
-  "am norocul scris in frunte.mp3", "aud banii cum vorbesc.mp3",
+  "am norocul scris in frunte.mp3", "aud banii cum vorbesc.mp3", "bautura si manele.mp3",
   "aurul si banii deloc n-au valoare.mp3", "baterie baterie foc.mp3",
   "ce miracol ce minune.mp3", "de ce ma minti.mp3", "eu n-am nici un chef de viata.mp3",
   "fac banii cu sacii.mp3", "good morning.mp3", "hoti adevarati.mp3",
