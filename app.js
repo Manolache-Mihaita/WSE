@@ -401,5 +401,6 @@ function debounce(fn,ms){ let t; return(...a)=>{clearTimeout(t);t=setTimeout(()=
 function esc(s){ return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
 
 // ---- init ----
+try{ $("#verInfo").textContent = "v"+Engine.VERSION+" · updated "+Engine.UPDATED; }catch(e){}
 loadPresets(); refreshTemplates(); loadUploaded();
 })();

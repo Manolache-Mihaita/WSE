@@ -105,13 +105,13 @@ window.PRESETS = [
         { type: "heist->contract", sound: "hoti adevarati.mp3", volume: 190 },
         { type: "heist->blueprint", sound: "hoti adevarati.mp3", volume: 190 },
         { type: "uniques", sound: "ce miracol ce minune.mp3", volume: 210 },
+        { soundTier: 6, sound: "simt mirosul banilor.mp3", volume: 280 },
         { type: "currency", sound: "tagidigiddam_ram.mp3", volume: 120 },
         { soundTier: 1, sound: "baterie baterie foc.mp3", volume: 120 },
         { soundTier: 2, sound: "tagidigiddam_ram.mp3", volume: 120 },
         { soundTier: 3, sound: "ce miracol ce minune.mp3", volume: 180 },
         { soundTier: 4, sound: "ah lelele.mp3", volume: 180 },
-        { soundTier: 5, sound: "ah lelelelele.mp3", volume: 230 },
-        { soundTier: 6, sound: "simt mirosul banilor.mp3", volume: 280 }
+        { soundTier: 5, sound: "ah lelelelele.mp3", volume: 230 }
       ],
       items: [
         { sound: "am norocul scris in frunte.mp3", volume: 230, baseTypes: [

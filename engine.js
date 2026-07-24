@@ -169,23 +169,13 @@
     const lines = [`${source.keyword} # custom-sound override for ${baseTypes.join(", ")}`];
     for (let i = 1; i < source.lines.length; i++) {
       const ln = source.lines[i], tok = firstToken(ln);
-      if (tok === "Continue" || SOUND_ACTIONS.has(tok) || tok === "StackSize") continue;
+      if (tok === "Continue" || SOUND_ACTIONS.has(tok)) continue;
+      // keep StackSize & every other condition: one override per source block
       if (tok === "BaseType") { lines.push(indentOf(ln) + `BaseType == ${quoted}`); continue; }
       lines.push(ln);
     }
     lines.push(makeSoundLine(sound, volume));
     return new Block(lines);
-  }
-
-  const blockHasStackSize = (b) => b.lines.slice(1).some((ln) => firstToken(ln) === "StackSize");
-  function findItemSourceBlock(items, baseType) {
-    let fallback = null;
-    for (const it of items)
-      if (it instanceof Block && it.keyword === "Show" && it.baseTypes().includes(baseType)) {
-        if (!fallback) fallback = it;
-        if (!blockHasStackSize(it)) return it;
-      }
-    return fallback;
   }
 
   function blockVisualActionLines(block) {
@@ -252,15 +242,16 @@
         items.splice(0, 0, `${MARKER_BEGIN} - ${baseTypes.join(", ")} >>>`, block, MARKER_END);
         applied++; continue;
       }
-      const groups = new Map(); const order = [];
-      for (const bt of baseTypes) {
-        const src = findItemSourceBlock(items, bt);
-        if (!src) { missing.push(bt); continue; }
-        if (!groups.has(src)) { groups.set(src, []); order.push(src); }
-        groups.get(src).push(bt);
-      }
-      for (const src of order) {
-        const bts = groups.get(src);
+      // Override above EVERY Show block listing any of the base types (keeping
+      // each block's own conditions incl. StackSize) so all stack tiers are covered.
+      const sources = []; const matched = new Set();
+      for (const it of items)
+        if (it instanceof Block && it.keyword === "Show") {
+          const hits = baseTypes.filter((bt) => it.baseTypes().includes(bt));
+          if (hits.length) { sources.push([it, hits]); hits.forEach((h) => matched.add(h)); }
+        }
+      for (const bt of baseTypes) if (!matched.has(bt)) missing.push(bt);
+      for (const [src, bts] of sources) {
         const override = buildItemOverride(src, bts, sound, volume);
         const idx = items.indexOf(src);
         items.splice(idx, 0, `${MARKER_BEGIN} - ${bts.join(", ")} >>>`, override, MARKER_END);
@@ -418,7 +409,10 @@
   }
 
   const AUDIO_EXTENSIONS = AUDIO_EXT;
+  const VERSION = "1.0.0";        // keep in sync with apply_sounds.py
+  const UPDATED = "2026-07-24";
   const api = {
+    VERSION, UPDATED,
     Block, splitIntoLinesAndBlocks, render, stripPreviousInsertions, blockCurrentSound, blockAlertId, blockSoundTier,
     categoryRuleMatches, ruleBaseTypes, buildCatalog, catalogToJsonable, buildScaffold,
     collectBucketSounds, collectReferencedSounds, ruleMatchInfo, ruleMatchedBlocks,
