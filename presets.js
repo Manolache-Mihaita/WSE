@@ -5,6 +5,20 @@
  * for them or rename to your files. */
 window.PRESETS = [
   {
+    id: "structure-tiers",
+    name: "Structure — universal sound tiers (blank)",
+    kind: "structure",
+    description: "The 6 FilterBlade value tiers. Works on ANY filter — stock (PlayAlertSound) or any custom pack (Mathil, Bex, …). Assign a sound to each.",
+    map: {
+      sound_dir: "sound", default_volume: 300,
+      categories: [
+        { soundTier: 1, sound: "" }, { soundTier: 2, sound: "" }, { soundTier: 3, sound: "" },
+        { soundTier: 4, sound: "" }, { soundTier: 5, sound: "" }, { soundTier: 6, sound: "" }
+      ],
+      items: []
+    }
+  },
+  {
     id: "structure-categories",
     name: "Structure — main categories (blank)",
     kind: "structure",

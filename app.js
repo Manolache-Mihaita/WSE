@@ -157,14 +157,15 @@ function fillSoundSelect(sel,current){
 }
 
 // ---- rules ----
-const FIELDS=["type","tier","bucket","baseType","items"];
-const FIELD_LABELS={type:"type",tier:"tier",bucket:"bucket",baseType:"baseType",items:"items (group)"};
+const FIELDS=["type","tier","bucket","soundTier","baseType","items"];
+const FIELD_LABELS={type:"type",tier:"tier",bucket:"bucket",soundTier:"sound tier (1-6)",baseType:"baseType",items:"items (group)"};
 const splitList=(v)=>(v||"").split(";").map(s=>s.trim()).filter(Boolean);
 function ruleObjectForRow(tr){
   const field=tr.querySelector(".f-field").value, value=tr.querySelector(".f-value").value.trim();
   const tierEl=tr.querySelector(".f-tier"), tier=(tierEl&&!tierEl.classList.contains("hidden"))?tierEl.value.trim():"";
   if(field==="items") return {baseTypes:splitList(value)};
   if(field==="baseType") return {baseType:value};
+  if(field==="soundTier") return {soundTier: parseInt(value,10)||value};
   const r={}; r[field]=value; if(field==="type"&&tier) r.tier=tier; return r;
 }
 $("#addRule").onclick=()=>addRule();
@@ -193,7 +194,7 @@ function addRule(preset){
   $("#rulesBody").appendChild(tr);
   const field=tr.querySelector(".f-field"), value=tr.querySelector(".f-value"), tier=tr.querySelector(".f-tier"),
         cond=tr.querySelector(".f-cond"), sound=tr.querySelector(".f-sound"), vol=tr.querySelector(".f-vol");
-  const syncList=()=>value.setAttribute("list","dl-"+(field.value==="items"?"baseType":field.value));
+  const syncList=()=>value.setAttribute("list","dl-"+(field.value==="items"?"baseType":field.value));  // dl-soundTier exists
   const syncTier=()=>{ if(field.value==="type") tier.classList.remove("hidden"); else {tier.classList.add("hidden");tier.value="";} };
   const syncCond=()=>{ if(field.value==="baseType"||field.value==="items") cond.classList.remove("hidden"); else {cond.classList.add("hidden");cond.value="";} };
   field.onchange=()=>{ syncList();syncTier();syncCond();updateMatch(tr);updateChange(tr); };
@@ -259,12 +260,15 @@ function updateChange(tr){
   if(condEl&&!condEl.classList.contains("hidden")&&condEl.value.trim()) vnote.innerHTML+=' <span class="badge b-info" title="builds a fresh block">+ '+esc(condEl.value.trim())+'</span>';
   tr.classList.toggle("changed",willChange);
 }
-function loadScaffold(){ $("#rulesBody").innerHTML=""; state.buckets.forEach(b=>addRule({field:"bucket",value:b.sound,sound:b.sound})); }
+function loadScaffold(){ $("#rulesBody").innerHTML="";
+  state.buckets.forEach(b=>{ const isFile=/\.(mp3|wav|ogg)$/i.test(b.sound);
+    addRule({field:"bucket",value:b.sound,sound:isFile?b.sound:""}); }); }
 function loadRulesFromMap(map){
   if(!state.filters.length){ $("#tplMsg").innerHTML='<span class="badge b-err">Load a filter first.</span>'; return; }
   $("#rulesBody").innerHTML="";
   (map.categories||[]).forEach(c=>{ let field="type",value="";
-    if(c.type!=null){field="type";value=c.type;} else if(c.tier!=null){field="tier";value=c.tier;} else if(c.bucket!=null){field="bucket";value=c.bucket;}
+    if(c.type!=null){field="type";value=c.type;} else if(c.tier!=null){field="tier";value=c.tier;}
+    else if(c.bucket!=null){field="bucket";value=c.bucket;} else if(c.soundTier!=null){field="soundTier";value=String(c.soundTier);}
     const p={field,value,sound:c.sound,volume:c.volume}; if(c.type!=null&&c.tier!=null) p.tier=c.tier; addRule(p);
   });
   (map.items||[]).forEach(i=>{ let field,value;

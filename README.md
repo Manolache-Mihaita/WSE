@@ -9,9 +9,13 @@ What a visitor can do:
 - Upload one or more `.filter` files, or a `.zip` containing them (and,
   optionally, sound files).
 - Edit the sound rules with the same map system as the desktop tool: categories
-  (`type` / `tier` / `bucket`), single items, item groups, `type`+`tier`
-  refinement (e.g. gold `stack3`), and item **conditions** (e.g. `Rarity Unique`,
-  `StackSize >= 1000`).
+  (`type` / `tier` / `bucket` / `alertSound`), single items, item groups,
+  `type`+`tier` refinement (e.g. gold `stack3`), and item **conditions** (e.g.
+  `Rarity Unique`, `StackSize >= 1000`).
+- Works on **any NeverSink filter** — stock (built-in `PlayAlertSound`) or any
+  custom sound pack (Mathil, Bex, …). Use the **`soundTier` 1–6** rule (or the
+  "universal sound tiers" preset) and one map re-sounds the right categories on
+  every filter, no matter how its sounds are encoded.
 - Start from a **preset** — blank rule-structures (assign your own sounds) or
   full example maps.
 - Provide sounds by **uploading their own** (stored in the browser via IndexedDB,
@@ -66,4 +70,3 @@ presets.js      bundled preset maps (blank structures + full examples)
   and a `map`).
 - The map format matches the desktop tool, so maps are interchangeable between
   this web version, the CLI (`apply_sounds.py --map`), and the Flask app.
-

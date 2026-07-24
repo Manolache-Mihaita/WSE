@@ -76,13 +76,49 @@
     return out.join("\n");
   }
 
+  function blockAlertId(block) {
+    for (let i = 1; i < block.lines.length; i++) {
+      const tok = firstToken(block.lines[i]);
+      if (tok === "PlayAlertSound" || tok === "PlayAlertSoundPositional") {
+        const m = block.lines[i].match(/\b(\d+)\b/);
+        if (m) return parseInt(m[1], 10);
+      }
+    }
+    return null;
+  }
+
+  // The 6 FilterBlade drop-sound slots; every pack names files "<pack>_<N><slot>.mp3".
+  const _SLOT_ORDER = [[5, "highmaps"], [6, "veryvaluable"], [1, "maybevaluable"],
+                       [2, "currency"], [3, "uniques"], [4, "maps"]];
+  const _TIER_RE = /_([1-6])(maybevaluable|currency|uniques|maps|highmaps|veryvaluable)/;
+  // The block's value tier (1-6) from a built-in id OR a custom-pack filename.
+  function blockSoundTier(block) {
+    const aid = blockAlertId(block);
+    if (aid != null && aid >= 1 && aid <= 6) return aid;
+    const idx = block.soundLineIndex();
+    if (idx >= 0) {
+      const vals = quotedValues(block.lines[idx]);
+      if (vals.length) {
+        const name = vals[0].split(";")[0].trim().toLowerCase();
+        const m = name.match(_TIER_RE);
+        if (m) return parseInt(m[1], 10);
+        for (const [tier, slot] of _SLOT_ORDER) if (name.includes(slot)) return tier;
+      }
+    }
+    return null;
+  }
+
+  // Sound signature: the CustomAlertSound filename, else "PlayAlertSound <id>" for
+  // a stock built-in sound. Lets bucket rules & scaffold work on any NeverSink filter.
   function blockCurrentSound(block) {
     const idx = block.soundLineIndex();
-    if (idx < 0) return null;
-    const vals = quotedValues(block.lines[idx]);
-    if (!vals.length) return null;
-    const name = vals[0].split(";")[0].trim();
-    return name || null;
+    if (idx >= 0) {
+      const vals = quotedValues(block.lines[idx]);
+      if (vals.length) { const name = vals[0].split(";")[0].trim(); if (name) return name; }
+      return null;
+    }
+    const aid = blockAlertId(block);
+    return aid != null ? "PlayAlertSound " + aid : null;
   }
 
   function tagMatches(ruleValue, blockValue, exact) {
@@ -94,11 +130,14 @@
 
   function categoryRuleMatches(rule, block) {
     const exact = !!rule.exact;
-    const wantType = rule.type, wantTier = rule.tier, wantBucket = rule.bucket;
-    if (wantType == null && wantTier == null && wantBucket == null) return false;
+    const wantType = rule.type, wantTier = rule.tier, wantBucket = rule.bucket,
+          wantAlert = rule.alertSound, wantSoundTier = rule.soundTier;
+    if (wantType == null && wantTier == null && wantBucket == null && wantAlert == null && wantSoundTier == null) return false;
     if (wantType != null && !tagMatches(wantType, block.tagType(), exact)) return false;
     if (wantTier != null && !tagMatches(wantTier, block.tagTier(), exact)) return false;
     if (wantBucket != null && blockCurrentSound(block) !== wantBucket) return false;
+    if (wantAlert != null && blockAlertId(block) !== parseInt(wantAlert, 10)) return false;
+    if (wantSoundTier != null && blockSoundTier(block) !== parseInt(wantSoundTier, 10)) return false;
     return true;
   }
 
@@ -303,7 +342,10 @@
   function buildScaffold(items) {
     const buckets = collectBucketSounds(items);
     const categories = [];
-    [...buckets.keys()].sort().forEach((s) => categories.push({ bucket: s, sound: s, _blocks: buckets.get(s) }));
+    [...buckets.keys()].sort().forEach((s) => {
+      const dot = s.lastIndexOf("."); const isFile = dot >= 0 && AUDIO_EXT.has(s.slice(dot).toLowerCase());
+      categories.push({ bucket: s, sound: isFile ? s : "", _blocks: buckets.get(s) });
+    });
     return { sound_dir: "sound", default_volume: 300, categories, items: [] };
   }
 
@@ -377,7 +419,7 @@
 
   const AUDIO_EXTENSIONS = AUDIO_EXT;
   const api = {
-    Block, splitIntoLinesAndBlocks, render, stripPreviousInsertions, blockCurrentSound,
+    Block, splitIntoLinesAndBlocks, render, stripPreviousInsertions, blockCurrentSound, blockAlertId, blockSoundTier,
     categoryRuleMatches, ruleBaseTypes, buildCatalog, catalogToJsonable, buildScaffold,
     collectBucketSounds, collectReferencedSounds, ruleMatchInfo, ruleMatchedBlocks,
     blockConditionLines, verifyAppearanceUnchanged, summarizeChanges, loadMap, patchText,
