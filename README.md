@@ -66,3 +66,4 @@ presets.js      bundled preset maps (blank structures + full examples)
   and a `map`).
 - The map format matches the desktop tool, so maps are interchangeable between
   this web version, the CLI (`apply_sounds.py --map`), and the Flask app.
+
