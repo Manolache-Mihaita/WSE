@@ -1,0 +1,2 @@
+# WSE
+Wraeclast Sound Editor
