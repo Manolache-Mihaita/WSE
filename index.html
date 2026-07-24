@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wraeclast Sound Editor (WSE)</title>
+<style>
+  :root{--bg:#14100c;--panel:#211a12;--panel2:#2c2216;--edge:#4a3a24;--gold:#c8aa6e;
+        --text:#e8dcc4;--muted:#9c8f78;--green:#7fb069;--red:#d16565;--grey:#7c7161;--blue:#6ea8c8;}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:"Segoe UI",system-ui,sans-serif;font-size:14px}
+  header{padding:18px 24px;border-bottom:1px solid var(--edge);background:linear-gradient(#241c12,#191309)}
+  h1{margin:0;font-size:20px;color:var(--gold);letter-spacing:.5px}
+  header p{margin:4px 0 0;color:var(--muted);font-size:12px}
+  main{max-width:1080px;margin:0 auto;padding:20px 24px 80px}
+  .panel{background:var(--panel);border:1px solid var(--edge);border-radius:8px;padding:16px;margin-bottom:18px}
+  .panel h2{margin:0 0 12px;font-size:14px;color:var(--gold);text-transform:uppercase;letter-spacing:1px}
+  button{background:var(--panel2);color:var(--text);border:1px solid var(--edge);border-radius:6px;padding:7px 12px;cursor:pointer;font-size:13px}
+  button:hover{border-color:var(--gold)}
+  button.primary{background:var(--gold);color:#1a1206;border-color:var(--gold);font-weight:600}
+  button.icon{padding:5px 9px}
+  input,select{background:#160f08;color:var(--text);border:1px solid var(--edge);border-radius:5px;padding:6px 8px;font-size:13px}
+  input:focus,select:focus{outline:none;border-color:var(--gold)}
+  table{width:100%;border-collapse:collapse}
+  th,td{text-align:left;padding:7px 8px;border-bottom:1px solid #33281a;vertical-align:middle}
+  th{color:var(--muted);font-weight:600;font-size:12px;text-transform:uppercase}
+  .muted{color:var(--muted)}
+  .badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600}
+  .b-ok{background:rgba(127,176,105,.18);color:var(--green)}
+  .b-err{background:rgba(209,101,101,.18);color:var(--red)}
+  .b-hide{background:rgba(124,113,97,.2);color:var(--grey)}
+  .b-info{background:rgba(110,168,200,.16);color:var(--blue)}
+  .b-warn{background:rgba(200,170,110,.18);color:var(--gold)}
+  .drop{border:2px dashed var(--edge);border-radius:8px;padding:26px;text-align:center;color:var(--muted);cursor:pointer;transition:.15s}
+  .drop.hover{border-color:var(--gold);color:var(--gold);background:#1c150c}
+  .row-val{width:100%;min-width:150px}
+  .hidden{display:none}
+  .files li{margin:4px 0}
+  .stat{display:inline-block;margin-right:16px}
+  .stat b{color:var(--gold)}
+  code{color:var(--blue)}
+  a.issue-link{cursor:pointer;text-decoration:none}
+  a.issue-link:hover{filter:brightness(1.25)}
+  .drawer{position:fixed;top:0;right:0;height:100%;width:400px;max-width:92vw;background:var(--panel2);
+          border-left:1px solid var(--edge);box-shadow:-10px 0 30px rgba(0,0,0,.45);overflow:auto;z-index:50}
+  .drawer-head{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 16px;
+               border-bottom:1px solid var(--edge);position:sticky;top:0;background:var(--panel2)}
+  .drawer-head b{color:var(--gold)}
+  #drawerBody{padding:14px 16px}
+  .issues{margin:0;padding-left:18px}
+  .issues li{margin:7px 0;font-size:13px;line-height:1.4}
+  tr.changed td{background:rgba(200,170,110,.06)}
+  tr.changed td:first-child{box-shadow:inset 3px 0 0 var(--gold)}
+  .chip{background:var(--panel);border:1px solid var(--edge);border-radius:12px;padding:2px 9px;font-size:12px}
+  .chip-x{cursor:pointer;color:var(--muted);margin-left:5px}
+  .chip-x:hover{color:var(--red)}
+</style>
+</head>
+<body>
+<header>
+  <h1>Wraeclast Sound Editor <span style="color:var(--muted);font-size:14px">(WSE)</span></h1>
+  <p>Runs entirely in your browser. Upload a filter (or a zip), map sounds to categories &amp; items,
+     then download the patched result. Your uploaded sounds stay on your device.</p>
+</header>
+<main>
+
+  <div class="panel">
+    <h2>1 · Load a filter</h2>
+    <div id="drop" class="drop">Drop <b>.filter</b> files or a <b>.zip</b> here, or click to browse</div>
+    <input id="fileInput" type="file" class="hidden" multiple accept=".filter,.zip">
+    <div style="margin-top:14px;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+      <span class="muted">…or start from a preset:</span>
+      <select id="presetSelect" style="min-width:300px"></select>
+      <button id="loadPreset">Load preset</button>
+      <span class="muted">(load a filter first, then a preset)</span>
+    </div>
+    <div style="margin-top:12px;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+      <span class="muted">Sound library:</span>
+      <button id="uploadSoundsBtn">⬆ Upload your sounds</button>
+      <input id="soundInput" type="file" class="hidden" multiple accept=".mp3,.wav,.ogg">
+      <button id="clearSoundsBtn">Clear uploaded sounds</button>
+      <span id="soundLibInfo" class="muted"></span>
+    </div>
+    <div id="uploadMsg" class="muted" style="margin-top:10px"></div>
+  </div>
+
+  <div id="filesPanel" class="panel hidden">
+    <h2>2 · Filter check</h2>
+    <div id="scopeNote" class="muted" style="margin-bottom:8px"></div>
+    <ul id="filesList" class="files"></ul>
+    <div id="catalogSummary" class="muted" style="margin-top:8px"></div>
+    <button id="catRef" class="icon" style="margin-top:8px;font-size:11px;font-weight:400">ⓘ Categories in this filter</button>
+    <div id="catRefBox" class="hidden" style="margin-top:8px;max-height:260px;overflow:auto;border:1px solid var(--edge);border-radius:6px;padding:10px 12px"></div>
+  </div>
+
+  <div id="rulesPanel" class="panel hidden">
+    <h2>3 · Sound rules <button id="rulesHelp" class="icon" style="font-size:11px;font-weight:400">ⓘ How do rules work?</button></h2>
+    <div id="rulesHelpBox" class="hidden" style="background:#160f08;border:1px solid var(--edge);border-radius:6px;padding:12px 14px;margin-bottom:12px;font-size:13px;line-height:1.5">
+      A rule has two sides: <b>Value (find)</b> = which blocks to match (not written to the filter);
+      <b>Sound (plays)</b> = what those blocks will play. Category rules target <code>type</code>/<code>tier</code>/<code>bucket</code>;
+      item rules target a <code>baseType</code> or an <b>items (group)</b>. A <code>type</code> rule can be narrowed by an optional
+      <b>tier</b> (e.g. <code>gold</code> + <code>stack3</code> = gold over 3000). Item rules have an optional
+      <b>conditions</b> box (e.g. <code>Rarity Unique</code>, <code>StackSize &gt;= 1000</code>) that builds a fresh block.
+      <b>▶</b> plays a sound (if you uploaded it), <b>✎</b> types a custom name, <b>🔍</b> shows the items a rule affects.
+    </div>
+    <p class="muted" style="margin-top:-4px">Your filter's existing categories are pre-loaded below.</p>
+    <table>
+      <thead><tr>
+        <th style="width:120px">Field</th>
+        <th>Value <span class="muted" style="font-weight:400">· find</span></th>
+        <th>Sound <span class="muted" style="font-weight:400">· plays</span></th>
+        <th style="width:70px">Volume</th>
+        <th style="width:180px">Match</th><th style="width:90px"></th>
+      </tr></thead>
+      <tbody id="rulesBody"></tbody>
+    </table>
+    <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap">
+      <button id="addRule">+ Add rule</button>
+      <button id="newGroup">+ Item group</button>
+      <button id="loadScaffold">Reset to existing categories</button>
+      <button id="genBtn" class="primary">Generate &amp; download (.zip)</button>
+    </div>
+    <div id="groupBuilder" class="hidden" style="margin-top:10px;border:1px solid var(--edge);border-radius:6px;padding:12px">
+      <b>New item group</b> <span class="muted">— many items, one sound; each keeps its own look.</span>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:8px">
+        <input id="groupSearch" list="dl-baseType" placeholder="search a base type… (Enter to add)" style="min-width:230px">
+        <button id="groupAdd">+ add item</button>
+        <span class="muted">Sound:</span>
+        <select id="groupSound" style="min-width:180px"></select>
+        <button id="groupPlay" class="icon" title="Play">▶</button>
+      </div>
+      <div id="groupChips" style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap"></div>
+      <div style="margin-top:8px;display:flex;gap:8px">
+        <button id="groupCreate" class="primary">Add group rule</button>
+        <button id="groupCancel">Cancel</button>
+      </div>
+    </div>
+    <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;border-top:1px solid #33281a;padding-top:10px">
+      <span class="muted">Templates:</span>
+      <button id="saveTpl">💾 Save</button>
+      <select id="tplSelect" style="min-width:160px"><option value="">(no saved templates)</option></select>
+      <button id="loadTpl">Load</button>
+      <button id="delTpl">Delete</button>
+      <span class="muted">|</span>
+      <button id="downloadMap">⬇ Download map .json</button>
+      <button id="importMapBtn">⬆ Import map .json</button>
+      <input id="importMap" type="file" accept=".json,application/json" class="hidden">
+    </div>
+    <div id="tplMsg" class="muted" style="margin-top:6px"></div>
+    <div id="genResults" style="margin-top:14px"></div>
+  </div>
+
+  <datalist id="dl-type"></datalist>
+  <datalist id="dl-tier"></datalist>
+  <datalist id="dl-bucket"></datalist>
+  <datalist id="dl-baseType"></datalist>
+  <datalist id="dl-sound"></datalist>
+  <datalist id="dl-cond">
+    <option value="Rarity Unique"><option value="Rarity Rare"><option value="StackSize >= 3001">
+    <option value="StackSize >= 1000"><option value="Class &quot;Divination Card&quot;">
+    <option value="ItemLevel >= 84"><option value="Corrupted True">
+  </datalist>
+  <audio id="player"></audio>
+
+  <aside id="drawer" class="drawer hidden">
+    <div class="drawer-head"><b id="drawerTitle">Details</b><button id="drawerClose" class="icon">✕ Close</button></div>
+    <div id="drawerBody"></div>
+  </aside>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="engine.js"></script>
+<script src="sound-names.js"></script>
+<script src="presets.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
