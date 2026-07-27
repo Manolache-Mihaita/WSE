@@ -63,17 +63,17 @@ window.PRESETS = [
     map: {
       sound_dir: "sound", default_volume: 300,
       categories: [
-        { type: "gold", tier: "stack3", sound: "aurul si banii deloc n-au valoare.mp3", volume: 280 },
-        { type: "uniques", sound: "ce miracol ce minune.mp3", volume: 210 },
-        { type: "currency", sound: "tagidigiddam_ram.mp3", volume: 120 },
-        { bucket: "Mathil-vulgarity_4maps.mp3", sound: "ah lelele.mp3", volume: 180 },
-        { bucket: "Mathil-vulgarity_5highmaps.mp3", sound: "ah lelelelele.mp3", volume: 230 },
-        { bucket: "Mathil-vulgarity_6veryvaluable.mp3", sound: "simt mirosul banilor.mp3", volume: 280 }
+        { type: "gold", tier: "stack3", sound: "aurul-si-banii-deloc-n-au-valoare.mp3", volume: 280 },
+        { type: "uniques", sound: "ce-miracol-ce-minune.mp3", volume: 210 },
+        { type: "currency", sound: "tagidigiddam-ram.mp3", volume: 120 },
+        { bucket: "Mathil-vulgarity_4maps.mp3", sound: "ah-lelele.mp3", volume: 180 },
+        { bucket: "Mathil-vulgarity_5highmaps.mp3", sound: "ah-lelelelele.mp3", volume: 230 },
+        { bucket: "Mathil-vulgarity_6veryvaluable.mp3", sound: "simt-mirosul-banilor.mp3", volume: 280 }
       ],
       items: [
-        { baseType: "Divine Orb", sound: "se lipesc banii de mine.mp3", volume: 300 },
-        { baseType: "Exalted Orb", sound: "mi s-a despocovit calu.mp3", volume: 300 },
-        { baseTypes: ["Mirror of Kalandra", "Hinekora's Lock", "Fracturing Orb"], sound: "toate diamantele n-au valoarea mea.mp3", volume: 300 }
+        { baseType: "Divine Orb", sound: "se-lipesc-banii-de-mine.mp3", volume: 300 },
+        { baseType: "Exalted Orb", sound: "mi-s-a-despocovit-calu.mp3", volume: 300 },
+        { baseTypes: ["Mirror of Kalandra", "Hinekora's Lock", "Fracturing Orb"], sound: "toate-diamantele-n-au-valoarea-mea.mp3", volume: 300 }
       ]
     }
   },
@@ -86,9 +86,9 @@ window.PRESETS = [
       sound_dir: "sound", default_volume: 300,
       categories: [],
       items: [
-        { baseTypes: ["Heavy Belt", "Leather Belt"], conditions: ["Rarity Unique"], sound: "de ce ma minti.mp3", volume: 280 },
-        { baseType: "Elegant Round Shield", conditions: ["Rarity Unique"], sound: "eu n-am nici un chef de viata.mp3", volume: 280 },
-        { baseType: "Gold", conditions: ["StackSize >= 1000"], sound: "aurul si banii deloc n-au valoare.mp3", volume: 200 }
+        { baseTypes: ["Heavy Belt", "Leather Belt"], conditions: ["Rarity Unique"], sound: "de-ce-ma-minti.mp3", volume: 280 },
+        { baseType: "Elegant Round Shield", conditions: ["Rarity Unique"], sound: "eu-n-am-nici-un-chef-de-viata.mp3", volume: 280 },
+        { baseType: "Gold", conditions: ["StackSize >= 1000"], sound: "aurul-si-banii-deloc-n-au-valoare.mp3", volume: 200 }
       ]
     }
   },
@@ -101,42 +101,42 @@ window.PRESETS = [
       sound_dir: "sound",
       default_volume: 300,
       categories: [
-        { type: "gold", tier: "stack3", sound: "aurul si banii deloc n-au valoare.mp3", volume: 280 },
-        { type: "heist->contract", sound: "hoti adevarati.mp3", volume: 190 },
-        { type: "heist->blueprint", sound: "hoti adevarati.mp3", volume: 190 },
-        { type: "uniques", sound: "ce miracol ce minune.mp3", volume: 210 },
-        { soundTier: 6, sound: "simt mirosul banilor.mp3", volume: 280 },
-        { type: "currency", sound: "tagidigiddam_ram.mp3", volume: 120 },
-        { soundTier: 1, sound: "baterie baterie foc.mp3", volume: 120 },
-        { soundTier: 2, sound: "tagidigiddam_ram.mp3", volume: 120 },
-        { soundTier: 3, sound: "ce miracol ce minune.mp3", volume: 180 },
-        { soundTier: 4, sound: "ah lelele.mp3", volume: 180 },
-        { soundTier: 5, sound: "ah lelelelele.mp3", volume: 230 }
+        { type: "gold", tier: "stack3", sound: "aurul-si-banii-deloc-n-au-valoare.mp3", volume: 280 },
+        { type: "heist->contract", sound: "hoti-adevarati.mp3", volume: 190 },
+        { type: "heist->blueprint", sound: "hoti-adevarati.mp3", volume: 190 },
+        { type: "uniques", sound: "ce-miracol-ce-minune.mp3", volume: 210 },
+        { soundTier: 6, sound: "simt-mirosul-banilor.mp3", volume: 280 },
+        { type: "currency", sound: "tagidigiddam-ram.mp3", volume: 120 },
+        { soundTier: 1, sound: "baterie-baterie-foc.mp3", volume: 120 },
+        { soundTier: 2, sound: "tagidigiddam-ram.mp3", volume: 120 },
+        { soundTier: 3, sound: "ce-miracol-ce-minune.mp3", volume: 180 },
+        { soundTier: 4, sound: "ah-lelele.mp3", volume: 180 },
+        { soundTier: 5, sound: "ah-lelelelele.mp3", volume: 230 }
       ],
       items: [
-        { sound: "am norocul scris in frunte.mp3", volume: 230, baseTypes: [
+        { sound: "am-norocul-scris-in-frunte.mp3", volume: 230, baseTypes: [
           "Horned Scarab of Bloodlines", "Ultimatum Scarab of Catalysing", "Horned Scarab of Preservation",
           "Harvest Scarab of Cornucopia", "Ambush Scarab of Containment", "Legion Scarab of Eternal Conflict",
           "Blight Scarab of Blooming", "Harvest Scarab of Doubling", "Breach Scarab of Resonant Cascade" ] },
-        { sound: "hoti adevarati.mp3", volume: 240, baseTypes: ["Tailoring Orb", "Tempering Orb"] },
-        { sound: "aud banii cum vorbesc.mp3", volume: 230, baseTypes: ["Tainted Oil", "Silver Oil", "Golden Oil", "Prismatic Oil"] },
-        { sound: "mi s-a despocovit calu.mp3", volume: 300, baseType: "Exalted Orb" },
-        { sound: "se lipesc banii de mine.mp3", volume: 300, baseType: "Divine Orb" },
-        { sound: "omu cu valoare il vezi din avion.mp3", volume: 300, baseTypes: [
+        { sound: "hoti-adevarati.mp3", volume: 240, baseTypes: ["Tailoring Orb", "Tempering Orb"] },
+        { sound: "aud-banii-cum-vorbesc.mp3", volume: 230, baseTypes: ["Tainted Oil", "Silver Oil", "Golden Oil", "Prismatic Oil"] },
+        { sound: "mi-s-a-despocovit-calu.mp3", volume: 300, baseType: "Exalted Orb" },
+        { sound: "se-lipesc-banii-de-mine.mp3", volume: 300, baseType: "Divine Orb" },
+        { sound: "omu-cu-valoare-il-vezi-din-avion.mp3", volume: 300, baseTypes: [
           "Chaotic Astrolabe", "Enshrouded Astrolabe", "Fruiting Astrolabe", "Fungal Astrolabe",
           "Grasping Astrolabe", "Lightless Astrolabe", "Nameless Astrolabe", "Runic Astrolabe",
           "Templar Astrolabe", "Timeless Astrolabe" ] },
-        { sound: "toate diamantele n-au valoarea mea.mp3", volume: 300, baseTypes: ["Hinekora's Lock", "Mirror of Kalandra", "Reflecting Mist", "Fracturing Orb"] },
-        { sound: "si cand mor am valoare guta version.mp3", volume: 270, baseTypes: ["The Fortunate", "Brother's Gift", "Divine Beauty", "The Sephirot", "Portal"] },
-        { sound: "eu n-am nici un chef de viata.mp3", volume: 280, baseType: "Elegant Round Shield", conditions: ["Rarity Unique"] },
-        { sound: "de ce ma minti.mp3", volume: 280, baseTypes: ["Heavy Belt", "Leather Belt"], conditions: ["Rarity Unique"] },
-        { sound: "unde sunt bani sunt si eu.mp3", volume: 250, baseTypes: [
+        { sound: "toate-diamantele-n-au-valoarea-mea.mp3", volume: 300, baseTypes: ["Hinekora's Lock", "Mirror of Kalandra", "Reflecting Mist", "Fracturing Orb"] },
+        { sound: "si-cand-mor-am-valoare-guta-version.mp3", volume: 270, baseTypes: ["The Fortunate", "Brother's Gift", "Divine Beauty", "The Sephirot", "Portal"] },
+        { sound: "eu-n-am-nici-un-chef-de-viata.mp3", volume: 280, baseType: "Elegant Round Shield", conditions: ["Rarity Unique"] },
+        { sound: "de-ce-ma-minti.mp3", volume: 280, baseTypes: ["Heavy Belt", "Leather Belt"], conditions: ["Rarity Unique"] },
+        { sound: "unde-sunt-bani-sunt-si-eu.mp3", volume: 250, baseTypes: [
           "House of Mirrors", "History", "Damnation", "The Slumbering Beast", "Unrequited Love",
           "Father's Love", "The Apothecary", "The Price of Devotion", "The Eye of Terror",
           "The Immortal", "Lucky Bastion", "The Demon", "The Insane Cat", "Seven Years Bad Luck",
           "Magnum Opus", "The Doctor" ] },
-        { sound: "unde sunt bani sunt si eu.mp3", volume: 250, baseTypes: ["Cursed Words", "Fire of Unknown Origin"], conditions: ["Class \"Divination Card\""] },
-        { sound: "bautura si manele.mp3", volume: 250, conditions: ["Rarity Unique", "Class == \"Life Flasks\" \"Mana Flasks\" \"Hybrid Flasks\" \"Utility Flasks\""] }
+        { sound: "unde-sunt-bani-sunt-si-eu.mp3", volume: 250, baseTypes: ["Cursed Words", "Fire of Unknown Origin"], conditions: ["Class \"Divination Card\""] },
+        { sound: "bautura-si-manele.mp3", volume: 250, conditions: ["Rarity Unique", "Class == \"Life Flasks\" \"Mana Flasks\" \"Hybrid Flasks\" \"Utility Flasks\""] }
       ]
     }
   }

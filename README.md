@@ -27,8 +27,16 @@ What a visitor can do:
 The same guarantees apply: only sound lines change (an **appearance check** runs
 on every generate), and a change summary is shown per file.
 
-**No copyrighted audio is hosted** — the site ships only sound *names*; audio
-lives in each visitor's browser.
+Sound files placed in **`sounds/`** are bundled with the site: any sound a rule
+references is fetched from there and added to the generated zip automatically, and
+plays in the preview — so a visitor doesn't have to upload anything. Visitors can
+still upload their own sounds to override or add to the bundled set. The bundled
+list is generated in `bundled-sounds.js` (regenerate it if you add/remove files in
+`sounds/`).
+
+> Note: bundling audio publishes those files publicly via GitHub Pages. Only bundle
+> audio you have the right to distribute. To ship names-only instead, remove the
+> `sounds/` folder and `bundled-sounds.js`; visitors then upload their own audio.
 
 ## Deploy to GitHub Pages
 

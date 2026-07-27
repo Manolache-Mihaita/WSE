@@ -4,7 +4,11 @@
 "use strict";
 const $ = (s) => document.querySelector(s);
 const state = { filters: [], catalog: null, buckets: [], sounds: [], uploaded: new Map(),
-                customNames: new Set(), scaffold: null };
+                customNames: new Set(), scaffold: null,
+                bundled: new Set(window.BUNDLED_SOUND_FILES || []) };
+const BUNDLED_DIR = "sounds/";
+const hasAudio = (name) => state.uploaded.has(name) || state.bundled.has(name);
+const bundledUrl = (name) => BUNDLED_DIR + encodeURIComponent(name);
 
 // ---- documentation ----
 const FIELD_DOCS = {
@@ -38,9 +42,9 @@ async function idbClear(){ const db=await idb(); return new Promise((res,rej)=>{
 
 // ---- sound library ----
 function rebuildSounds(){
-  const set = new Set([...(window.BUNDLED_SOUND_NAMES||[]), ...state.uploaded.keys(), ...state.customNames]);
+  const set = new Set([...(window.BUNDLED_SOUND_NAMES||[]), ...state.bundled, ...state.uploaded.keys(), ...state.customNames]);
   state.sounds = [...set].sort((a,b)=>a.toLowerCase().localeCompare(b.toLowerCase()));
-  $("#soundLibInfo").textContent = `${state.sounds.length} names · ${state.uploaded.size} with audio uploaded`;
+  $("#soundLibInfo").textContent = `${state.sounds.length} names · ${state.bundled.size} bundled · ${state.uploaded.size} uploaded`;
   fillDatalists();
 }
 async function loadUploaded(){
@@ -63,7 +67,8 @@ function playSound(name){
   if(!name) return; const p=$("#player");
   const up = state.uploaded.get(name);
   if(up){ p.src=up.url; p.play().catch(()=>{}); }
-  else { $("#tplMsg").innerHTML='<span class="muted">No audio uploaded for “'+esc(name)+'”. Use “Upload your sounds”.</span>'; }
+  else if(state.bundled.has(name)){ p.src=bundledUrl(name); p.play().catch(()=>{}); }
+  else { $("#tplMsg").innerHTML='<span class="muted">No audio for “'+esc(name)+'”. Upload it, or add it to the bundled sounds.</span>'; }
 }
 
 // ---- upload / parse filters ----
@@ -152,7 +157,7 @@ function fillDatalists(){ const c=state.catalog;
 function fillSoundSelect(sel,current){
   let html='<option value="">— choose sound —</option>';
   if(current && !state.sounds.includes(current)) html+='<option value="'+esc(current)+'">'+esc(current)+' (custom)</option>';
-  html+=state.sounds.map(s=>{ const has=state.uploaded.has(s); return '<option value="'+esc(s)+'">'+esc(s)+(has?" ♪":"")+'</option>'; }).join("");
+  html+=state.sounds.map(s=>'<option value="'+esc(s)+'">'+esc(s)+(hasAudio(s)?" ♪":"")+'</option>').join("");
   sel.innerHTML=html; sel.value=current||"";
 }
 
@@ -373,7 +378,14 @@ async function generate(){
     results.push({name:f.name,stats});
   }
   const missingAudio=[];
-  for(const s of needed){ const up=state.uploaded.get(s); if(up) zip.file("filter/"+s,up.blob); else missingAudio.push(s); }
+  for(const s of needed){
+    const up=state.uploaded.get(s);
+    if(up){ zip.file("filter/"+s, up.blob); }
+    else if(state.bundled.has(s)){
+      try{ const b=await (await fetch(bundledUrl(s))).blob(); zip.file("filter/"+s, b); }
+      catch(e){ missingAudio.push(s); }
+    } else missingAudio.push(s);
+  }
   zip.file("sound_map.used.json",JSON.stringify(map,null,2));
   const blob=await zip.generateAsync({type:"blob"});
   downloadBlob(blob,"patched_filter.zip");
