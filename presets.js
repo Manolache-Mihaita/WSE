@@ -136,7 +136,7 @@ window.PRESETS = [
           "The Immortal", "Lucky Bastion", "The Demon", "The Insane Cat", "Seven Years Bad Luck",
           "Magnum Opus", "The Doctor" ] },
         { sound: "unde sunt bani sunt si eu.mp3", volume: 250, baseTypes: ["Cursed Words", "Fire of Unknown Origin"], conditions: ["Class \"Divination Card\""] },
-        { sound: "bautura si manele.mp3", volume: 250, conditions: ["Rarity Unique", "Class \"Flask\""] }
+        { sound: "bautura si manele.mp3", volume: 250, conditions: ["Rarity Unique", "Class == \"Life Flasks\" \"Mana Flasks\" \"Hybrid Flasks\" \"Utility Flasks\""] }
       ]
     }
   }
