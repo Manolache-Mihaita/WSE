@@ -410,8 +410,8 @@
   }
 
   const AUDIO_EXTENSIONS = AUDIO_EXT;
-  const VERSION = "1.1.0";        // keep in sync with apply_sounds.py
-  const UPDATED = "2026-07-27";
+  const VERSION = "1.1.1";        // keep in sync with apply_sounds.py
+  const UPDATED = "2026-07-28";
   const api = {
     VERSION, UPDATED,
     Block, splitIntoLinesAndBlocks, render, stripPreviousInsertions, blockCurrentSound, blockAlertId, blockSoundTier,

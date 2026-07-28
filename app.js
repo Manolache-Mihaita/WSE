@@ -287,10 +287,19 @@ function buildMap(){
   for(const tr of $("#rulesBody").children){
     const field=tr.querySelector(".f-field").value, value=tr.querySelector(".f-value").value.trim(),
           sound=tr.querySelector(".f-sound").value.trim(), volRaw=tr.querySelector(".f-vol").value.trim();
-    if(!value||!sound) continue;
+    if(!sound) continue;
+    const isItem=(field==="baseType"||field==="items");
+    const conds=isItem?splitList((tr.querySelector(".f-cond")||{}).value||""):[];
+    // Keep a row only if it has a value, OR it's an item row carrying conditions
+    // (a conditions-only rule, e.g. Rarity Unique flasks, legitimately has no BaseType).
+    if(!value && !(isItem&&conds.length)) continue;
     const rule=ruleObjectForRow(tr); rule.sound=sound; if(volRaw!=="") rule.volume=parseInt(volRaw,10);
-    if(field==="baseType"||field==="items"){ const conds=splitList((tr.querySelector(".f-cond")||{}).value||""); if(conds.length) rule.conditions=conds; items.push(rule); }
-    else categories.push(rule);
+    if(isItem){
+      if(field==="baseType"&&!value) delete rule.baseType;   // don't emit an empty BaseType
+      if(field==="items"&&!value) delete rule.baseTypes;
+      if(conds.length) rule.conditions=conds;
+      items.push(rule);
+    } else categories.push(rule);
   }
   return { sound_dir:"sound", default_volume:300, categories, items };
 }
